@@ -1,10 +1,12 @@
 # importing libraries
+import sys
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-import sys
 from rules import player
 
+_wd = os.getcwd()
 
 class piece:
     def __init__(self, button, x, y, row, col, lst_neighbors, color='white'):
@@ -24,22 +26,22 @@ class piece:
         if self.color == 'red':
             self.button.setStyleSheet("border-radius : 20; "
                                       "border : 2px solid black;"
-                                      "background-image : url(/Users/euleday/mostafa/umz/game theory/morabaraba/images/red.png);")
+                                      f"background-image : url({_wd}/images/images/red.png);")
 
         elif self.color == 'blue':
             self.button.setStyleSheet("border-radius : 20; "
                                       "border : 2px solid black;"
-                                      "background-image : url(/Users/euleday/mostafa/umz/game theory/morabaraba/images/blue.jpg);")
+                                      f"background-image : url({_wd}/images/images/blue.jpg);")
 
         elif self.color == 'yellow':
             self.button.setStyleSheet("border-radius : 20; "
                                       "border : 2px solid black;"
-                                      "background-image : url(/Users/euleday/mostafa/umz/game theory/morabaraba/images/yellow.jpg);")
+                                      f"background-image : url({_wd}/images/images/yellow.jpg);")
 
         elif self.color == 'white':
             self.button.setStyleSheet("border-radius : 20; "
                                       "border : 2px solid black;"
-                                      "background-image : url(/Users/euleday/mostafa/umz/game theory/morabaraba/images/white.png);")
+                                      f"background-image : url({_wd}/images/images/white.png);")
 
 
 class board(QMainWindow):
@@ -85,8 +87,8 @@ class board(QMainWindow):
         # setting geometry
         self.setGeometry(100, 100, 800, 600)
 
-        self.setStyleSheet("""
-        background-image: url("/Users/euleday/mostafa/umz/game theory/morabaraba/images/1.jpg"); 
+        self.setStyleSheet(f"""
+        background-image: url("{_wd}/images/images/1.jpg"); 
         background-repeat: no-repeat; 
         background-position: center;""")
 
@@ -126,8 +128,8 @@ class board(QMainWindow):
         self.main_board[1][5].button.clicked.connect(
             lambda: self.allow_to_move(1, 5) if not self.flag_remove else self.remove_bead(1, 5))
 
-    # def mouseMoveEvent(self, event):
-    #     print(f"x mouse: {event.x()} and y mouse: {event.y()}")
+    def mouseMoveEvent(self, event):
+        print(f"x mouse: {event.x()} and y mouse: {event.y()}")
 
     def remove_bead(self, row, col):
         button: piece = self.main_board[row][col]
@@ -264,6 +266,11 @@ class board(QMainWindow):
 
                     self.check_score()
 
-App = QApplication(sys.argv)  # create pyqt5 app
-window = board()  # create the instance of our Window
-sys.exit(App.exec())
+
+if __name__ == '__main__':
+
+    App = QApplication(sys.argv)  # create pyqt5 app
+    window = board()  # create the instance of our Window
+    sys.exit(App.exec())
+
+
