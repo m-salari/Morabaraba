@@ -17,7 +17,7 @@ class piece:
         self.button.setGeometry(x, y, 40, 40)
         self.button.setStyleSheet("border-radius : 20; "
                                   "border : 2px solid black;")
-        self.lst_neighbors = lst_neighbors
+        self.neighbors = lst_neighbors
 
     def change_button_color(self):
         # print('color:', self.color)
@@ -49,20 +49,21 @@ class board(QMainWindow):
         self.player1 = player('player1', 'red', 1, number_bead=3)
         self.player2 = player('player2', 'blue')
 
+        self.lst_neighbors = []
         self.start_bead_move = None
         self.end_bead_move = None
         self.color_change_bead = None
 
         self.init_board()
 
-        self.main_board = [[None, None, None],  # a
-                           [None, None, None],  # b
-                           [None, None, None],  # c
-                           [None, None, None],  # d1
-                           [None, None, None],  # d2
-                           [None, None, None],  # e
-                           [None, None, None],  # f
-                           [None, None, None]]  # g
+        self.main_board = [[None, None, None, None, None, None, None],  # a
+                           [None, None, None, None, None, None, None],  # b
+                           [None, None, None, None, None, None, None],  # c
+                           [None, None, None, None, None, None, None],  # d
+                           # [None, None, None, None, None, None, None],  # d2
+                           [None, None, None, None, None, None, None],  # e
+                           [None, None, None, None, None, None, None],  # f
+                           [None, None, None, None, None, None, None]]  # g
 
         # self.button_row_a = [None, None, None]
         # self.button_row_b = [None, None, None]
@@ -90,13 +91,13 @@ class board(QMainWindow):
 
     def draw_pieces(self):
         # piece(QPushButton(self), 30, 36, 'a', 0, [(2,2)], 'white')
-        self.main_board[0][0]: piece = piece(QPushButton(self), 30, 36, 'a', 0, lst_neighbors=[()])
-        self.main_board[0][1]: piece = piece(QPushButton(self), 378, 36, 'a', None,  3)
-        self.main_board[0][2]: piece = piece(QPushButton(self), 726, 36, 'a', None,  6)
+        self.main_board[0][0]: piece = piece(QPushButton(self), 30, 36, row=0, col=0, lst_neighbors=[(0, 3), (3, 0), (1, 1)])
+        self.main_board[0][3]: piece = piece(QPushButton(self), 378, 36, row=0, col=3, lst_neighbors=[(0, 0), (0, 6), (1, 3)])
+        self.main_board[0][6]: piece = piece(QPushButton(self), 726, 36, row=0, col=6, lst_neighbors=[(0, 3), (4, 6), (1, 5)])
 
-        self.main_board[1][0]: piece = piece(QPushButton(self), 112, 98, 'b', None,  1)
-        self.main_board[1][1]: piece = piece(QPushButton(self), 378, 94, 'b', None,  3)
-        self.main_board[1][2]: piece = piece(QPushButton(self), 642, 96, 'b', None,  5)
+        self.main_board[1][1]: piece = piece(QPushButton(self), 112, 98, row=1, col=1, lst_neighbors=[(0, 0), (2, 2), (1, 3), (3, 1)])
+        self.main_board[1][3]: piece = piece(QPushButton(self), 378, 94, row=1, col=3,  lst_neighbors=[(1, 1), (1, 5), (0, 3), (2, 3)])
+        self.main_board[1][5]: piece = piece(QPushButton(self), 642, 96, row=1, col=5,  lst_neighbors=[(1, 3), (4, 5), (0, 6), (2, 4)])
 
         # self.main_board[2][0]: piece = piece(QPushButton(self), 'x', 'y', 'c', 0, [(2, 1), (3, 1,)])
         # self.main_board[2][0]: piece = piece(QPushButton(self), 206, 162, 'c', 2)
@@ -104,12 +105,12 @@ class board(QMainWindow):
 
     def moving(self):
         self.main_board[0][0].button.clicked.connect(lambda: self.allow_to_move(0, 0))
-        self.main_board[0][1].button.clicked.connect(lambda: self.allow_to_move(0, 1))
-        self.main_board[0][2].button.clicked.connect(lambda: self.allow_to_move(0, 2))
+        self.main_board[0][3].button.clicked.connect(lambda: self.allow_to_move(0, 3))
+        self.main_board[0][6].button.clicked.connect(lambda: self.allow_to_move(0, 6))
 
-        self.main_board[1][0].button.clicked.connect(lambda: self.allow_to_move(1, 0))
         self.main_board[1][1].button.clicked.connect(lambda: self.allow_to_move(1, 1))
-        self.main_board[1][2].button.clicked.connect(lambda: self.allow_to_move(1, 2))
+        self.main_board[1][3].button.clicked.connect(lambda: self.allow_to_move(1, 3))
+        self.main_board[1][5].button.clicked.connect(lambda: self.allow_to_move(1, 5))
 
 
         # self.main_board[2][0].button.clicked.connect(lambda: self.allow_to_move(2, 0))
@@ -166,22 +167,16 @@ class board(QMainWindow):
     def check_neighbors(self, row, col):
         lst_neighbors = []
 
-        # check horizontal
-        print(f'row: {row} and col: {col}')
-        print(self.main_board[row][col])
+        button = self.main_board[row][col]
+        for row, col in button.neighbors:
+            try:
+                if self.main_board[row][col].color == 'white':
+                    lst_neighbors.append((row, col))
 
-        if self.main_board[row][col - 1].color == 'white':
-            lst_neighbors.append((row, col - 1))
+            except: # به خاطر اینکه هنوز صفحه کامل نیستو بعد از کامل شدن try برداشته شود
+                pass
 
-        if (col < 2) and (self.main_board[row][col + 1].color == 'white'):
-            lst_neighbors.append((row, col + 1))
-
-        if (col == 2) and (self.main_board[row][0].color == 'white'):  # if last element on row check first element
-            lst_neighbors.append((row, 0))
-
-        # check vertical
-
-        return True
+        return lst_neighbors
 
     def allow_to_move(self, row, col):
         # button: piece = self.get_button(row, col)
@@ -216,9 +211,8 @@ class board(QMainWindow):
         elif self.player1.number_bead == 0 and self.player2.number_bead == 0:
 
             if button.color != 'white':  # choice start goal to move bead
-                # todo: check neighbors
-                lst_neighbors = self.check_neighbors(row, col)
-                if lst_neighbors:  # if neighbor is empty
+                self.lst_neighbors = self.check_neighbors(row, col)
+                if self.lst_neighbors:  # if neighbors white exist
 
                     flag_turn = False  # check color to is allowed
                     if self.player1.turn and button.color == self.player1.color:
@@ -241,15 +235,17 @@ class board(QMainWindow):
                         self.start_bead_move.change_button_color()
 
             if button.color == 'white' and self.color_change_bead:  # choice end goal to move bead
-                # todo: check state end goal exist in list allowed move
-                self.end_bead_move = button
-                self.end_bead_move.color = self.color_change_bead
-                self.end_bead_move.change_button_color()
+                if (button.row, button.col) in self.lst_neighbors:  # check state end goal exist in list allowed move
 
-                self.start_bead_move.color = 'white'
-                self.start_bead_move.change_button_color()
+                    self.end_bead_move = button
+                    self.end_bead_move.color = self.color_change_bead
+                    self.end_bead_move.change_button_color()
 
-                self.color_change_bead = None
+                    self.start_bead_move.color = 'white'
+                    self.start_bead_move.change_button_color()
+
+                    self.color_change_bead = None
+                    self.lst_neighbors = []
 
 
 App = QApplication(sys.argv)  # create pyqt5 app
