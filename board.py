@@ -8,6 +8,7 @@ from rules import player
 
 _wd = os.getcwd()
 
+
 class piece:
     def __init__(self, button, x, y, row, col, lst_neighbors, color='white'):
         self.button: QPushButton = button
@@ -95,17 +96,89 @@ class board(QMainWindow):
     def draw_pieces(self):
         self.main_board[0][0]: piece = piece(QPushButton(self), 30, 36, row=0, col=0,
                                              lst_neighbors=[(0, 3), (3, 0), (1, 1)])
+
         self.main_board[0][3]: piece = piece(QPushButton(self), 378, 36, row=0, col=3,
                                              lst_neighbors=[(0, 0), (0, 6), (1, 3)])
+
         self.main_board[0][6]: piece = piece(QPushButton(self), 726, 36, row=0, col=6,
                                              lst_neighbors=[(0, 3), (4, 6), (1, 5)])
 
+
+
         self.main_board[1][1]: piece = piece(QPushButton(self), 112, 98, row=1, col=1,
                                              lst_neighbors=[(0, 0), (2, 2), (1, 3), (3, 1)])
+
         self.main_board[1][3]: piece = piece(QPushButton(self), 378, 94, row=1, col=3,
                                              lst_neighbors=[(1, 1), (1, 5), (0, 3), (2, 3)])
+
         self.main_board[1][5]: piece = piece(QPushButton(self), 642, 96, row=1, col=5,
                                              lst_neighbors=[(1, 3), (4, 5), (0, 6), (2, 4)])
+
+
+
+        self.main_board[2][2]: piece = piece(QPushButton(self), 206, 161, row=2, col=2,
+                                             lst_neighbors=[(1, 1), (3, 2), (2, 3)])
+
+        self.main_board[2][3]: piece = piece(QPushButton(self), 378, 158, row=2, col=3,
+                                             lst_neighbors=[(1, 3), (2, 4), (2, 2)])
+
+        self.main_board[2][4]: piece = piece(QPushButton(self), 556, 161, row=2, col=4,
+                                             lst_neighbors=[(1, 5), (2, 4), (3, 4)])
+
+
+
+
+        self.main_board[3][0]: piece = piece(QPushButton(self), 32, 281, row=3, col=0,
+                                             lst_neighbors=[(0, 0), (6, 0), (3, 1)])
+
+        self.main_board[3][1]: piece = piece(QPushButton(self), 111, 282, row=3, col=1,
+                                             lst_neighbors=[(3, 0), (1, 1), (3, 2), (5, 1)])
+
+        self.main_board[3][2]: piece = piece(QPushButton(self), 205, 282, row=3, col=2,
+                                             lst_neighbors=[(2, 2), (3, 1), (4, 2)])
+
+        self.main_board[3][4]: piece = piece(QPushButton(self), 561, 282, row=3, col=4,
+                                             lst_neighbors=[(2, 4), (3, 5), (4, 4)])
+
+        self.main_board[3][5]: piece = piece(QPushButton(self), 650, 284, row=3, col=5,
+                                             lst_neighbors=[(1, 5), (5, 5), (3, 4), (3, 6)])
+
+        self.main_board[3][6]: piece = piece(QPushButton(self), 730, 284, row=3, col=6,
+                                             lst_neighbors=[(0, 6), (6, 6), (3, 5)])
+
+
+
+        self.main_board[4][2]: piece = piece(QPushButton(self), 210, 402, row=4, col=2,
+                                             lst_neighbors=[(3, 2), (4, 3), (5, 1)])
+
+        self.main_board[4][3]: piece = piece(QPushButton(self), 380, 408, row=4, col=3,
+                                             lst_neighbors=[(4, 2), (4, 4), (5, 3)])
+
+        self.main_board[4][4]: piece = piece(QPushButton(self), 558 , 406, row=4, col=4,
+                                             lst_neighbors=[(4, 3), (3, 4), (5, 5)])
+
+
+
+        self.main_board[5][1]: piece = piece(QPushButton(self), 116, 471, row=5, col=1,
+                                             lst_neighbors=[(4, 2), (3, 1), (6, 0), (5, 3)])
+
+        self.main_board[5][3]: piece = piece(QPushButton(self), 380, 468, row=5, col=3,
+                                             lst_neighbors=[(5, 1), (4, 3), (5, 5), (6, 3)])
+
+        self.main_board[5][5]: piece = piece(QPushButton(self), 648, 474, row=5, col=5,
+                                             lst_neighbors=[(5, 3), (3, 5), (6, 6), (4, 4)])
+
+
+
+        self.main_board[6][0]: piece = piece(QPushButton(self), 32, 528, row=6, col=0,
+                                             lst_neighbors=[(3, 0), (5, 1), (6, 3)])
+
+        self.main_board[6][3]: piece = piece(QPushButton(self), 380, 528, row=6, col=3,
+                                             lst_neighbors=[(6, 0), (5, 3), (6, 6)])
+
+        self.main_board[6][6]: piece = piece(QPushButton(self), 730, 527, row=6, col=6,
+                                             lst_neighbors=[(6, 3), (5, 5), (3, 6)])
+
 
     def moving(self):
         # a
@@ -128,6 +201,64 @@ class board(QMainWindow):
         self.main_board[1][5].button.clicked.connect(
             lambda: self.allow_to_move(1, 5) if not self.flag_remove else self.remove_bead(1, 5))
 
+
+
+
+        self.main_board[2][2].button.clicked.connect(
+            lambda: self.allow_to_move(2, 2) if not self.flag_remove else self.remove_bead(2, 2))
+
+        self.main_board[2][3].button.clicked.connect(
+            lambda: self.allow_to_move(2, 3) if not self.flag_remove else self.remove_bead(2, 3))
+
+        self.main_board[2][4].button.clicked.connect(
+            lambda: self.allow_to_move(2, 4) if not self.flag_remove else self.remove_bead(2, 4))
+
+        self.main_board[3][0].button.clicked.connect(
+            lambda: self.allow_to_move(3, 0) if not self.flag_remove else self.remove_bead(3, 0))
+
+        # self.main_board[3][1].button.clicked.connect(
+        #     lambda: self.allow_to_move(3, 1) if not self.flag_remove else self.remove_bead(3, 1))
+
+        self.main_board[3][2].button.clicked.connect(
+            lambda: self.allow_to_move(3, 2) if not self.flag_remove else self.remove_bead(3, 2))
+
+        self.main_board[3][4].button.clicked.connect(
+            lambda: self.allow_to_move(3, 4) if not self.flag_remove else self.remove_bead(3, 4))
+
+        self.main_board[3][5].button.clicked.connect(
+            lambda: self.allow_to_move(3, 5) if not self.flag_remove else self.remove_bead(3, 5))
+
+        self.main_board[3][6].button.clicked.connect(
+            lambda: self.allow_to_move(3, 6) if not self.flag_remove else self.remove_bead(3, 6))
+
+        self.main_board[4][2].button.clicked.connect(
+            lambda: self.allow_to_move(4, 2) if not self.flag_remove else self.remove_bead(4, 2))
+
+        self.main_board[4][3].button.clicked.connect(
+            lambda: self.allow_to_move(4, 3) if not self.flag_remove else self.remove_bead(4, 3))
+
+        self.main_board[4][4].button.clicked.connect(
+            lambda: self.allow_to_move(4, 4) if not self.flag_remove else self.remove_bead(4, 4))
+
+        self.main_board[5][1].button.clicked.connect(
+            lambda: self.allow_to_move(5, 1) if not self.flag_remove else self.remove_bead(5, 1))
+
+        self.main_board[5][3].button.clicked.connect(
+            lambda: self.allow_to_move(5, 3) if not self.flag_remove else self.remove_bead(5, 3))
+
+        self.main_board[5][5].button.clicked.connect(
+            lambda: self.allow_to_move(5, 5) if not self.flag_remove else self.remove_bead(5, 5))
+
+        self.main_board[6][0].button.clicked.connect(
+            lambda: self.allow_to_move(6, 0) if not self.flag_remove else self.remove_bead(6, 0))
+
+        self.main_board[6][3].button.clicked.connect(
+            lambda: self.allow_to_move(6, 3) if not self.flag_remove else self.remove_bead(6, 3))
+
+        self.main_board[6][6].button.clicked.connect(
+            lambda: self.allow_to_move(6, 6) if not self.flag_remove else self.remove_bead(6, 6))
+
+
     def mouseMoveEvent(self, event):
         print(f"x mouse: {event.x()} and y mouse: {event.y()}")
 
@@ -142,38 +273,45 @@ class board(QMainWindow):
 
     def check_score(self):
         try:
-            if self.main_board[0][0].color == self.main_board[0][3].color == self.main_board[0][6].color != 'white':  # row a
+            if self.main_board[0][0].color == self.main_board[0][3].color == self.main_board[0][
+                6].color != 'white':  # row a
                 print('score a')
                 self.flag_remove = True
 
-            if self.main_board[1][1].color == self.main_board[1][3].color == self.main_board[1][5].color != 'white':  # row b
+            if self.main_board[1][1].color == self.main_board[1][3].color == self.main_board[1][
+                5].color != 'white':  # row b
                 print('score b')
                 self.flag_remove = True
 
-            if self.main_board[2][2].color == self.main_board[2][3].color == self.main_board[2][4].color != 'white':  # row c
+            if self.main_board[2][2].color == self.main_board[2][3].color == self.main_board[2][
+                4].color != 'white':  # row c
                 print('score c')
                 self.flag_remove = True
 
-            if self.main_board[3][0].color == self.main_board[3][1].color == self.main_board[3][2].color != 'white':  # row d1
+            if self.main_board[3][0].color == self.main_board[3][1].color == self.main_board[3][
+                2].color != 'white':  # row d1
                 print('score d1')
                 self.flag_remove = True
 
-            if self.main_board[3][4].color == self.main_board[3][5].color == self.main_board[3][6].color != 'white':  # row d2
+            if self.main_board[3][4].color == self.main_board[3][5].color == self.main_board[3][
+                6].color != 'white':  # row d2
                 print('score d2')
                 self.flag_remove = True
 
-            if self.main_board[4][2].color == self.main_board[4][3].color == self.main_board[4][4].color != 'white':  # row e
+            if self.main_board[4][2].color == self.main_board[4][3].color == self.main_board[4][
+                4].color != 'white':  # row e
                 print('score e')
                 self.flag_remove = True
 
-            if self.main_board[5][1].color == self.main_board[5][3].color == self.main_board[5][5].color != 'white':  # row f
+            if self.main_board[5][1].color == self.main_board[5][3].color == self.main_board[5][
+                5].color != 'white':  # row f
                 print('score f')
                 self.flag_remove = True
 
-            if self.main_board[6][0].color == self.main_board[6][3].color == self.main_board[6][6].color != 'white':  # row g
+            if self.main_board[6][0].color == self.main_board[6][3].color == self.main_board[6][
+                6].color != 'white':  # row g
                 print('score g')
                 self.flag_remove = True
-
 
             # **  full row **
 
@@ -205,7 +343,7 @@ class board(QMainWindow):
                         self.player1.number_bead -= 1
                         self.player = self.player1
 
-                                                    #  if last bead --> switch
+                        #  if last bead --> switch
                     if self.player2.number_bead > 0 or self.player1.number_bead == 0:  # switch turn
                         self.player1.turn = 0
                         self.player2.turn = 1
@@ -214,7 +352,7 @@ class board(QMainWindow):
                     if self.player2.number_bead > 0:
                         self.player2.number_bead -= 1
                         self.player = self.player2
-                                                    # if last bead --> switch
+                        # if last bead --> switch
                     if self.player1.number_bead > 0 or self.player2.number_bead == 0:  # switch turn
                         self.player2.turn = 0
                         self.player1.turn = 1
@@ -268,9 +406,6 @@ class board(QMainWindow):
 
 
 if __name__ == '__main__':
-
     App = QApplication(sys.argv)  # create pyqt5 app
     window = board()  # create the instance of our Window
     sys.exit(App.exec())
-
-
