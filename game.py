@@ -4,6 +4,7 @@ import os
 from PyQt5.QtWidgets import *
 from rules_game import rules
 
+
 _wd = os.getcwd()
 
 main_board = [[None, None, None, None, None, None, None],  # a
@@ -57,7 +58,6 @@ class board(QMainWindow):
 
         self.rule = rules(main_board)
         self.main_board = self.rule.main_board
-
         self.init_board()
         self.draw_pieces()
         self.moving()
@@ -163,6 +163,7 @@ class board(QMainWindow):
 
     def moving(self):
         # a
+
         self.main_board[0][0].button.clicked.connect(
             lambda: self.rule.allow_to_move(0, 0) if not self.rule.flag_remove else self.rule.remove_bead(0, 0))
 

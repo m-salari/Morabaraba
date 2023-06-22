@@ -1,3 +1,7 @@
+import random
+import time
+
+
 class player:
     def __init__(self, name, color, turn=0, number_bead=12):
         self.name = name
@@ -23,86 +27,127 @@ class rules:
         self.end_bead_move = None
         self.color_change_bead = None
         self.flag_remove = False
+        self.lst_neighbors_bot = []
+
+        self.flag_bot = 0
+
+    def insert(self, button):
+        if self.player1.turn:
+            if self.player1.number_bead > 0:
+                self.player1.number_bead -= 1
+                self.player = self.player1
+
+                #  if last bead --> switch
+            if self.player2.number_bead > 0 or self.player1.number_bead == 0:  # switch turn
+                self.player1.turn = 0
+                self.player2.turn = 1
+                # self.flag_bot = 3
+
+        elif self.player2.turn:
+            if self.player2.number_bead > 0:
+                self.player2.number_bead -= 1
+                self.player = self.player2
+
+                # if last bead --> switch
+            if self.player1.number_bead > 0 or self.player2.number_bead == 0:  # switch turn
+                self.player1.turn = 1
+                self.player2.turn = 0
+
+        # self.player.number_bead -= 1
+        button.color = self.player.color
+        button.change_button_color()
+        self.player.alive_bead += 1
+        self.check_score()
+
+        print('count of bead red: ', self.player1.number_bead)
+        print('count of bead blue: ', self.player2.number_bead)
+        print("***********************\n")
+
+    def choice_start_bead_to_move(self, button):
+        row, col = button.row, button.col
+
+        self.lst_neighbors = self.get_all_white_piece_for_min_bead('white')
+        if not self.lst_neighbors:
+            self.lst_neighbors = self.check_neighbors(row, col)
+
+        if self.lst_neighbors:  # if neighbors white exist
+            # print('number player:', self.player.name)
+
+            flag_turn = False  # check color to is allowed
+            if self.player1.turn and button.color == self.player1.color:
+                self.player = self.player1
+                self.player1.turn = 0
+                self.player2.turn = 1
+                self.flag_bot = 1
+                flag_turn = True
+
+            elif self.player2.turn and button.color == self.player2.color:
+                self.player = self.player2
+                # self.player2.turn = 0
+                # self.player1.turn = 1
+                self.flag_bot += 1  # 3 --> 4
+                print('444444444444444 shodam:  ', self.flag_bot)
+                flag_turn = True
+
+            if flag_turn:
+                print('change color !!!!!!!! to yellow')
+                self.start_bead_move = button
+                self.color_change_bead = button.color
+
+                self.start_bead_move.color = 'yellow'
+                self.start_bead_move.change_button_color()
+
+                print('success change color yellow')
+
+    def choice_end_bead_to_move(self, button):
+        self.end_bead_move = button
+        self.end_bead_move.color = self.color_change_bead
+        self.end_bead_move.change_button_color()
+
+        self.start_bead_move.color = 'white'
+        self.start_bead_move.change_button_color()
+
+        self.color_change_bead = None
+        self.lst_neighbors = []
+        self.check_score()
+
+        # print('flag_bot player:', self.flag_bot)
+        if self.flag_bot == 1:
+            self.flag_bot = 2
+            if self.flag_remove is False:
+                self.flag_bot = 3
+
+        elif self.flag_bot == 5:
+            if self.flag_remove is False:
+                self.player1.turn = 1
+                self.player2.turn = 0
+                self.flag_bot = 0
 
     def allow_to_move(self, row, col):
         # button: piece = self.get_button(row, col)
         button = self.main_board[row][col]
 
-
         if self.player1.number_bead > 0 or self.player2.number_bead > 0:
             if button.color == 'white':
-                if self.player1.turn:
-                    if self.player1.number_bead > 0:
-                        self.player1.number_bead -= 1
-                        self.player = self.player1
+                self.insert(button)
 
-                        #  if last bead --> switch
-                    if self.player2.number_bead > 0 or self.player1.number_bead == 0:  # switch turn
-                        self.player1.turn = 0
-                        self.player2.turn = 1
+                if self.flag_remove is False:
+                    self.flag_bot = 3
 
-                elif self.player2.turn:
-                    if self.player2.number_bead > 0:
-                        self.player2.number_bead -= 1
-                        self.player = self.player2
-                        # if last bead --> switch
-                    if self.player1.number_bead > 0 or self.player2.number_bead == 0:  # switch turn
-                        self.player2.turn = 0
-                        self.player1.turn = 1
-
-                button.color = self.player.color
-                button.change_button_color()
-                self.player.alive_bead += 1
-                self.check_score()
-                # print(f'{self.button_row_b[0].color}, {self.button_row_b[1].color}, {self.button_row_b[2].color}')
-
-                # print('player1 red number head out: ', self.player1.number_bead)
-                # print('player2 blue number head out: ', self.player2.number_bead)
+                else:
+                    self.flag_bot = 0
 
         elif self.player1.number_bead == 0 and self.player2.number_bead == 0:
-
             if button.color != 'white':  # choice start goal to move bead
+                self.choice_start_bead_to_move(button)
 
-                self.lst_neighbors = self.get_all_white_piece()
-                if not self.lst_neighbors:
-                    self.lst_neighbors = self.check_neighbors(row, col)
-
-                if self.lst_neighbors:  # if neighbors white exist
-
-                    flag_turn = False  # check color to is allowed
-                    if self.player1.turn and button.color == self.player1.color:
-                        self.player = self.player1
-                        self.player1.turn = 0
-                        self.player2.turn = 1
-                        flag_turn = True
-
-                    elif self.player2.turn and button.color == self.player2.color:
-                        self.player = self.player2
-                        self.player2.turn = 0
-                        self.player1.turn = 1
-                        flag_turn = True
-
-                    if flag_turn:
-                        self.start_bead_move = button
-                        self.color_change_bead = button.color
-
-                        self.start_bead_move.color = 'yellow'
-                        self.start_bead_move.change_button_color()
-
-            if button.color == 'white' and self.color_change_bead:  # choice end goal to move bead
+            elif button.color == 'white' and self.color_change_bead:  # choice end goal to move bead
                 if (button.row, button.col) in self.lst_neighbors:  # check state end goal exist in list allowed move
+                    self.choice_end_bead_to_move(button)
 
-                    self.end_bead_move = button
-                    self.end_bead_move.color = self.color_change_bead
-                    self.end_bead_move.change_button_color()
-
-                    self.start_bead_move.color = 'white'
-                    self.start_bead_move.change_button_color()
-
-                    self.color_change_bead = None
-                    self.lst_neighbors = []
-
-                    self.check_score()
+        if self.player2.turn and self.flag_bot >= 3:
+            print('flag bot:', self.flag_bot)
+            self.bot()
 
     def check_neighbors(self, row, col):
         lst_neighbors = []
@@ -118,22 +163,26 @@ class rules:
 
         return lst_neighbors
 
-    def get_all_white_piece(self):
-        lst_all_white_piece = []
+    def get_all_white_piece_for_min_bead(self, color):
 
         if self.player == self.player1:
             turn = self.player2
         else:
             turn = self.player1
-        print('\nturnnnnn alive nead\n:', turn.alive_bead)
+        # print('\nturnnnnn alive nead\n:', turn.alive_bead)
         if turn.alive_bead == self.min_bead_for_game:
-            for row in range(len(self.main_board)):
-                for col in range(len(self.main_board[row])):
-                    if self.main_board[row][col]:
-                        if self.main_board[row][col].color == 'white':
-                            lst_all_white_piece.append((row, col))
+            return self.get_all_color_piece(color)
 
-            print('lst all white piece:', lst_all_white_piece)
+    def get_all_color_piece(self, color):
+        lst_all_white_piece = []
+
+        for row in range(len(self.main_board)):
+            for col in range(len(self.main_board[row])):
+                if self.main_board[row][col]:
+                    if self.main_board[row][col].color == color:
+                        lst_all_white_piece.append((row, col))
+
+        # print('lst all white piece:', lst_all_white_piece)
         return lst_all_white_piece
 
     def check_score(self):
@@ -275,42 +324,41 @@ class rules:
                 self.flag_remove = True
 
             # ** full skew **
+            # self.flag_remove = self.remove_from_number_head(self.flag_remove)
             self.remove_from_number_head()
-            # print('scores: ', self.lst_scores_now)
-
         except:
             pass
 
     def remove_from_number_head(self):
+        # print('player1 red number head out before remove: ', self.player1.number_bead)
+        # print('player2 blue number head out before remove: ', self.player2.number_bead)
         if self.flag_remove:
-            print('player1 red number head out before remove: ', self.player1.number_bead)
-            print('player2 blue number head out before remove: ', self.player2.number_bead)
-
             if self.player == self.player1 and self.player2.number_bead > 0:
                 self.player2.number_bead -= 1
                 self.flag_remove = False
+                # return False
 
             elif self.player == self.player2 and self.player1.number_bead > 0:
                 self.player1.number_bead -= 1
                 self.flag_remove = False
-
-            print('player1 red number head out: ', self.player1.number_bead)
-            print('player2 blue number head out: ', self.player2.number_bead)
-            print('*************************\t')
+            # return False
 
     def remove_bead(self, row, col):
 
         button = self.main_board[row][col]
-        if self.player.color != button.color:
+        if (self.player.color != button.color) and (button.color != 'white'):
             button.color = 'white'
             button.change_button_color()
             self.flag_remove = False
 
             if self.player == self.player1:
                 self.player2.alive_bead -= 1
+                self.flag_bot = 3
+                self.bot()
 
             if self.player == self.player2:
                 self.player1.alive_bead -= 1
+                self.flag_bot = 0
 
             self.check_win()
         else:
@@ -322,3 +370,59 @@ class rules:
 
         elif self.player2.alive_bead < self.min_bead_for_game:
             print('player 1 is winner')
+
+    def bot(self):
+        print('player 2')
+
+        if self.player2.number_bead > 0:  # insert
+            lst_white_piece = self.get_all_color_piece('white')
+            cc = random.choice(lst_white_piece)
+
+            print('turn choice: ', cc)
+            self.allow_to_move(cc[0], cc[1])
+
+            self.flag_bot = 0
+            self.player2.turn = 0
+            self.player1.turn = 1
+
+        elif self.player2.number_bead == 0 and self.player1.number_bead == 0:  # moving blank
+            if self.flag_bot == 3:  # choice start bead and change color to yellow
+                lst_blue_piece = self.get_all_color_piece('blue')
+
+                # choice start white for move
+                start_piece = random.choice(lst_blue_piece)
+                self.lst_neighbors = self.check_neighbors(start_piece[0], start_piece[1])
+
+                while True:
+                    if self.lst_neighbors:
+                        break
+                    start_piece = random.choice(lst_blue_piece)
+                    self.lst_neighbors = self.check_neighbors(start_piece[0], start_piece[1])
+
+                print('start piece ', start_piece)
+                print('lst neighbors start: ', self.lst_neighbors)
+
+                print("ccccccc:", start_piece)
+                # self.flag_bot = 4
+                self.allow_to_move(start_piece[0], start_piece[1])
+
+            elif self.flag_bot == 4:  # choice end bead and move to him
+
+                print("lst neighbors:", self.lst_neighbors)
+                end_piece = random.choice(self.lst_neighbors)
+
+                print('enddddd:', end_piece)
+                self.flag_bot = 5
+                self.allow_to_move(end_piece[0], end_piece[1])
+
+            elif self.flag_bot == 5:  # remove enemy bead from board:
+                lst_red_piece = self.get_all_color_piece('red')
+                remove_piece = random.choice(lst_red_piece)
+                print('remove piece:', remove_piece)
+
+                self.remove_bead(remove_piece[0], remove_piece[1])
+                self.player1.turn = 1
+                self.player2.turn = 0
+                self.flag_remove = False
+                self.flag_bot = 0
+
