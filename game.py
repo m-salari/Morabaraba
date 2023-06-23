@@ -30,7 +30,6 @@ class piece:
         self.neighbors = lst_neighbors
 
     def change_button_color(self):
-        # print('color:', self.color)
         if self.color == 'red':
             self.button.setStyleSheet("border-radius : 20; "
                                       "border : 2px solid black;"
