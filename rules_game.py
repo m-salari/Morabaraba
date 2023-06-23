@@ -1,6 +1,6 @@
 import random
 import time
-
+from Algorithm import Algorithm
 
 class player:
     def __init__(self, name, color, turn=0, number_bead=12):
@@ -376,11 +376,11 @@ class rules:
 
         if self.player2.number_bead > 0:  # insert
             lst_white_piece = self.get_all_color_piece('white')
-            cc = random.choice(lst_white_piece)
-
-            print('turn choice: ', cc)
-            self.allow_to_move(cc[0], cc[1])
-
+            # cc = random.choice(lst_white_piece)
+            #
+            # print('turn choice: ', cc)
+            # self.allow_to_move(cc[0], cc[1])
+            self.Algotithm.minimax
             self.flag_bot = 0
             self.player2.turn = 0
             self.player1.turn = 1
@@ -425,4 +425,3 @@ class rules:
                 self.player2.turn = 0
                 self.flag_remove = False
                 self.flag_bot = 0
-
