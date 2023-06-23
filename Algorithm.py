@@ -8,7 +8,8 @@ class Algorithm:
 
     def minimax(self,button):
         blank_lst = self.rules.get_all_color_piece('white')
-        for i in blank_lst:
+        # لیست خونه های خالی رو برای حرکت بگیریم
+        for i in blank_lst: # برای تموم خونه های خالی مونده حرکت هارو بررسی کنه تا بهترین انتخاب شه
             #play next move
             self.rules.allow_to_move(i[0],i[1])
             if self.player.player1.turn == 1:
@@ -33,12 +34,14 @@ class Algorithm:
                     row = i[0]
                     column = i[1]
 
-            #turn the color to white
-            next.bead_move = button
-            next.color_change_bead = button.color
 
-            next.color = 'white'
-            next.change_button_color()
+            # برای برگردوندن حرکت به قبل انجام میشه که اینا کامنته همش اصلا روی گرافیک نمیاد
+            #turn the color to white
+            # next.bead_move = button
+            # next.color_change_bead = button.color
+            #
+            # next.color = 'white'
+            # next.change_button_color()
 
             if self.alpha >= self.beta:
                 break
@@ -47,3 +50,5 @@ class Algorithm:
             return [row,column,self.alpha]
         else:
             return [row,column,self.beta]
+
+        # بالا که نوشته بودم next[2] منظورم این آلفا و بتا بود که ریترن میشه. برای عایدی بهترین حرکت
