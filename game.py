@@ -2,8 +2,7 @@
 import sys
 import os
 from PyQt5.QtWidgets import *
-from rules_game import rules
-
+from main import game_loop
 
 _wd = os.getcwd()
 
@@ -55,8 +54,11 @@ class board(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.rule = rules(main_board)
-        self.main_board = self.rule.main_board
+        self.main_board = main_board
+        # self.rule = movements(self.main_board)
+        self.game_loop = game_loop(self.main_board)
+
+        # self.main_board = self.rule.main_board
         self.init_board()
         self.draw_pieces()
         self.moving()
@@ -162,83 +164,78 @@ class board(QMainWindow):
 
     def moving(self):
         # a
-
         self.main_board[0][0].button.clicked.connect(
-            lambda: self.rule.allow_to_move(0, 0) if not self.rule.flag_remove else self.rule.remove_bead(0, 0))
+            lambda: self.game_loop.main(0, 0))
 
         self.main_board[0][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(0, 3) if not self.rule.flag_remove else self.rule.remove_bead(0, 3))
+            lambda: self.game_loop.main(0, 3))
 
         self.main_board[0][6].button.clicked.connect(
-            lambda: self.rule.allow_to_move(0, 6) if not self.rule.flag_remove else self.rule.remove_bead(0, 6))
+            lambda: self.game_loop.main(0, 6))
 
         # b
         self.main_board[1][1].button.clicked.connect(
-            lambda: self.rule.allow_to_move(1, 1) if not self.rule.flag_remove else self.rule.remove_bead(1, 1))
+            lambda: self.game_loop.main(1, 1))
 
         self.main_board[1][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(1, 3) if not self.rule.flag_remove else self.rule.remove_bead(1, 3))
+            lambda: self.game_loop.main(1, 3))
 
         self.main_board[1][5].button.clicked.connect(
-            lambda: self.rule.allow_to_move(1, 5) if not self.rule.flag_remove else self.rule.remove_bead(1, 5))
+            lambda: self.game_loop.main(1, 5))
 
         self.main_board[2][2].button.clicked.connect(
-            lambda: self.rule.allow_to_move(2, 2) if not self.rule.flag_remove else self.rule.remove_bead(2, 2))
+            lambda: self.game_loop.main(2, 2))
 
         self.main_board[2][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(2, 3) if not self.rule.flag_remove else self.rule.remove_bead(2, 3))
+            lambda: self.game_loop.main(2, 3))
 
         self.main_board[2][4].button.clicked.connect(
-            lambda: self.rule.allow_to_move(2, 4) if not self.rule.flag_remove else self.rule.remove_bead(2, 4))
+            lambda: self.game_loop.main(2, 4))
 
         self.main_board[3][0].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 0) if not self.rule.flag_remove else self.rule.remove_bead(3, 0))
+            lambda: self.game_loop.main(3, 0))
 
         self.main_board[3][1].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 1) if not self.rule.flag_remove else self.rule.remove_bead(3, 1))
+            lambda: self.game_loop.main(3, 1))
 
         self.main_board[3][2].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 2) if not self.rule.flag_remove else self.rule.remove_bead(3, 2))
+            lambda: self.game_loop.main(3, 2))
 
         self.main_board[3][4].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 4) if not self.rule.flag_remove else self.rule.remove_bead(3, 4))
+            lambda: self.game_loop.main(3, 4))
 
         self.main_board[3][5].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 5) if not self.rule.flag_remove else self.rule.remove_bead(3, 5))
+            lambda: self.game_loop.main(3, 5))
 
         self.main_board[3][6].button.clicked.connect(
-            lambda: self.rule.allow_to_move(3, 6) if not self.rule.flag_remove else self.rule.remove_bead(3, 6))
+            lambda: self.game_loop.main(3, 6))
 
         self.main_board[4][2].button.clicked.connect(
-            lambda: self.rule.allow_to_move(4, 2) if not self.rule.flag_remove else self.rule.remove_bead(4, 2))
+            lambda: self.game_loop.main(4, 2))
 
         self.main_board[4][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(4, 3) if not self.rule.flag_remove else self.rule.remove_bead(4, 3))
+            lambda: self.game_loop.main(4, 3))
 
         self.main_board[4][4].button.clicked.connect(
-            lambda: self.rule.allow_to_move(4, 4) if not self.rule.flag_remove else self.rule.remove_bead(4, 4))
+            lambda: self.game_loop.main(4, 4))
 
         self.main_board[5][1].button.clicked.connect(
-            lambda: self.rule.allow_to_move(5, 1) if not self.rule.flag_remove else self.rule.remove_bead(5, 1))
+            lambda: self.game_loop.main(5, 1))
 
         self.main_board[5][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(5, 3) if not self.rule.flag_remove else self.rule.remove_bead(5, 3))
+            lambda: self.game_loop.main(5, 3))
 
         self.main_board[5][5].button.clicked.connect(
-            lambda: self.rule.allow_to_move(5, 5) if not self.rule.flag_remove else self.rule.remove_bead(5, 5))
+            lambda: self.game_loop.main(5, 5))
 
         self.main_board[6][0].button.clicked.connect(
-            lambda: self.rule.allow_to_move(6, 0) if not self.rule.flag_remove else self.rule.remove_bead(6, 0))
+            lambda: self.game_loop.main(6, 0))
 
         self.main_board[6][3].button.clicked.connect(
-            lambda: self.rule.allow_to_move(6, 3) if not self.rule.flag_remove else self.rule.remove_bead(6, 3))
+            lambda: self.game_loop.main(6, 3))
 
         self.main_board[6][6].button.clicked.connect(
-            lambda: self.rule.allow_to_move(6, 6) if not self.rule.flag_remove else self.rule.remove_bead(6, 6))
-
-
-    # def mouseMoveEvent(self, event):
-    #     print(f"x mouse: {event.x()} and y mouse: {event.y()}")
+            lambda: self.game_loop.main(6, 6))
 
 
 if __name__ == '__main__':
