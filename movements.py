@@ -7,6 +7,9 @@ class movements(RulesGame):
 
     def handler_player(self, row, col):
         # button: piece = self.get_button(row, col)
+        if not self.player1.turn:
+            return True
+
         button = self.main_board[row][col]
 
         if self.flag_remove:
@@ -30,7 +33,9 @@ class movements(RulesGame):
             if button.color == 'white' and self.color_change_bead:  # choice end goal to move bead
                 result_choice_end_bead = self.choice_end_bead_to_move(button)
                 if result_choice_end_bead:
-                    self.switch_turn()
-                    return True
+                    if not self.flag_remove:
+                        self.switch_turn()
+                        return True
+
 
         return False
