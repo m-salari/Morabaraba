@@ -1,8 +1,8 @@
 from random import choice
-from movements import movements
+from algorithms_movement import algorithms
 
 
-class Bot(movements):
+class Bot(algorithms):
     def __init__(self, main_board, bot_color='blue'):
         super().__init__(main_board)
         self.bot_color = bot_color
