@@ -1,5 +1,5 @@
 from algorithms_movement import algorithms
-
+from copy import deepcopy
 
 class Bot(algorithms):
     def __init__(self, main_board, bot_color='blue'):
@@ -7,11 +7,22 @@ class Bot(algorithms):
         self.bot_color = bot_color
 
     def bot_insert(self):
+
         random_insert = self.random('white')
-        print('insert random choice :', random_insert)
         button = self.main_board[random_insert[0]][random_insert[1]]
 
-        self.insert(button)
+        if self.player2.number_bead <= 10:
+            lst_score_now = deepcopy(self.lst_scores_now)
+            value, qx, qy = self.min_alpha_beta(float('-inf'), float('inf'))
+            print('valueeeeeeeeeee:', value)
+            print('insert random choice :', (qx, qy))
+            self.lst_scores_now = lst_score_now
+            button = self.main_board[qx][qy]
+
+        self.player2.turn = 1
+        self.player1.turn = 0
+
+        self.insert(button, 1)
         self.switch_turn()
 
     def bot_choice_start_bead_to_move(self):

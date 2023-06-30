@@ -11,6 +11,7 @@ class Player:
 class RulesGame:
     def __init__(self, main_board):
         self.main_board = main_board
+        print('created!')
 
         self.player1 = Player('player1', 'red', 1)
         self.player2 = Player('player2', 'blue')
@@ -25,15 +26,30 @@ class RulesGame:
         self.color_change_bead = None
 
         self.flag_bot = 0
+        self.len_lst_score_now = 0
 
-    def insert(self, button):
+    def undo_insert(self, button):
+        if self.player1.turn:
+            self.player1.number_bead += 1
+            button.color = 'white'
+            self.player1.alive_bead -= 1
+            # self.check_score()
+
+        elif self.player2.turn:
+            self.player2.number_bead += 1
+            button.color = "white"
+            self.player2.alive_bead -= 1
+            # self.check_score()
+
+    def insert(self, button, flag_change_color):
         if self.player1.turn:
             if self.player1.number_bead > 0:
                 self.player1.number_bead -= 1
 
                 button.color = self.player1.color
                 self.player1.alive_bead += 1
-                button.change_button_color()
+                if flag_change_color:
+                    button.change_button_color()
                 self.check_score()
 
         elif self.player2.turn:
@@ -42,7 +58,8 @@ class RulesGame:
 
                 button.color = self.player2.color
                 self.player2.alive_bead += 1
-                button.change_button_color()
+                if flag_change_color:
+                    button.change_button_color()
                 self.check_score()
 
         print('count of bead red: ', self.player1.number_bead)
@@ -171,49 +188,49 @@ class RulesGame:
 
         if self.main_board[0][0].color == self.main_board[0][3].color == self.main_board[0][6].color != 'white' \
                 and '000306' not in self.lst_scores_now:
-            print('0')
+            # print('0')
             self.lst_scores_now.append('000306')
             self.flag_remove = True
 
         if self.main_board[1][1].color == self.main_board[1][3].color == self.main_board[1][5].color != 'white' \
                 and '111315' not in self.lst_scores_now:  # row b
-            print('1')
+            # print('1')
             self.lst_scores_now.append('111315')
             self.flag_remove = True
 
         if self.main_board[2][2].color == self.main_board[2][3].color == self.main_board[2][4].color != 'white' \
                 and '222324' not in self.lst_scores_now:  # row c
-            print('2')
+            # print('2')
             self.lst_scores_now.append('222324')
             self.flag_remove = True
 
         if self.main_board[3][0].color == self.main_board[3][1].color == self.main_board[3][2].color != 'white' \
                 and '303132' not in self.lst_scores_now:  # row d1
-            print('3')
+            # print('3')
             self.lst_scores_now.append('303132')
             self.flag_remove = True
 
         if self.main_board[3][4].color == self.main_board[3][5].color == self.main_board[3][6].color != 'white' \
                 and '343536' not in self.lst_scores_now:  # row d2
-            print('4')
+            # print('4')
             self.lst_scores_now.append('343536')
             self.flag_remove = True
 
         if self.main_board[4][2].color == self.main_board[4][3].color == self.main_board[4][4].color != 'white' \
                 and '424344' not in self.lst_scores_now:  # row e
-            print('5')
+            # print('5')
             self.lst_scores_now.append('424344')
             self.flag_remove = True
 
         if self.main_board[5][1].color == self.main_board[5][3].color == self.main_board[5][5].color != 'white' \
                 and '515355' not in self.lst_scores_now:  # row f
-            print('6')
+            # print('6')
             self.lst_scores_now.append('515355')
             self.flag_remove = True
 
         if self.main_board[6][0].color == self.main_board[6][3].color == self.main_board[6][6].color != 'white' \
                 and '606366' not in self.lst_scores_now:  # row g
-            print('7')
+            # print('7')
             self.lst_scores_now.append('606366')
             self.flag_remove = True
 
@@ -221,49 +238,49 @@ class RulesGame:
 
         if self.main_board[0][0].color == self.main_board[3][0].color == self.main_board[6][0].color != 'white' \
                 and '003060' not in self.lst_scores_now:
-            print('8')
+            # print('8')
             self.lst_scores_now.append('003060')
             self.flag_remove = True
 
         if self.main_board[1][1].color == self.main_board[3][1].color == self.main_board[5][1].color != 'white' \
                 and '113151' not in self.lst_scores_now:
-            print('9')
+            # print('9')
             self.lst_scores_now.append('113151')
             self.flag_remove = True
 
         if self.main_board[2][2].color == self.main_board[3][2].color == self.main_board[4][2].color != 'white' \
                 and '223242' not in self.lst_scores_now:
-            print('10')
+            # print('10')
             self.lst_scores_now.append('223242')
             self.flag_remove = True
 
         if self.main_board[0][3].color == self.main_board[1][3].color == self.main_board[2][3].color != 'white' \
                 and '031323' not in self.lst_scores_now:
-            print('11')
+            # print('11')
             self.lst_scores_now.append('031323')
             self.flag_remove = True
 
         if self.main_board[4][3].color == self.main_board[5][3].color == self.main_board[6][3].color != 'white' \
                 and '435363' not in self.lst_scores_now:
-            print('12')
+            # print('12')
             self.lst_scores_now.append('435363')
             self.flag_remove = True
 
         if self.main_board[2][4].color == self.main_board[3][4].color == self.main_board[4][4].color != 'white' \
                 and '243444' not in self.lst_scores_now:
-            print('13')
+            # print('13')
             self.lst_scores_now.append('243444')
             self.flag_remove = True
 
         if self.main_board[1][5].color == self.main_board[3][5].color == self.main_board[5][5].color != 'white' \
                 and '153555' not in self.lst_scores_now:
-            print('14')
+            # print('14')
             self.lst_scores_now.append('153555')
             self.flag_remove = True
 
         if self.main_board[0][6].color == self.main_board[3][6].color == self.main_board[6][6].color != 'white' \
                 and '063666' not in self.lst_scores_now:
-            print('15')
+            # print('15')
             self.lst_scores_now.append('063666')
             self.flag_remove = True
 
@@ -271,33 +288,33 @@ class RulesGame:
 
         if self.main_board[0][0].color == self.main_board[1][1].color == self.main_board[2][2].color != 'white' \
                 and '001122' not in self.lst_scores_now:
-            print('16')
+            # print('16')
             self.lst_scores_now.append('001122')
             self.flag_remove = True
 
         if self.main_board[0][6].color == self.main_board[1][5].color == self.main_board[2][4].color != 'white' \
                 and '061524' not in self.lst_scores_now:
-            print('17')
+            # print('17')
             self.lst_scores_now.append('061524')
             self.flag_remove = True
 
         if self.main_board[6][0].color == self.main_board[5][1].color == self.main_board[4][2].color != 'white' \
                 and '605142' not in self.lst_scores_now:
-            print('18')
+            # print('18')
             self.lst_scores_now.append('605142')
             self.flag_remove = True
 
         if self.main_board[6][6].color == self.main_board[5][5].color == self.main_board[4][4].color != 'white' \
                 and '665544' not in self.lst_scores_now:
-            print('19')
+            # print('19')
             self.lst_scores_now.append('665544')
             self.flag_remove = True
 
             # ** full skew **
-            # self.flag_remove = self.remove_from_number_head(self.flag_remove)
-        self.remove_from_number_head()
+            # self.flag_remove = self.remove_from_out_bead(self.flag_remove)
+        self.remove_from_out_bead()
 
-    def remove_from_number_head(self):
+    def remove_from_out_bead(self):
         if self.flag_remove:
             if self.player1.turn and self.player2.number_bead > 0:
                 self.player2.number_bead -= 1
@@ -342,3 +359,62 @@ class RulesGame:
 
         elif self.player2.alive_bead < self.min_bead_for_game:
             print('player 1 is winner')
+
+    def is_end_out_bead(self):
+
+        if self.lst_scores_now:
+
+            if len(self.lst_scores_now) != self.len_lst_score_now:
+                self.len_lst_score_now = len(self.lst_scores_now)
+
+                a, b = int(self.lst_scores_now[-1][0]), int(self.lst_scores_now[-1][1])
+                if self.main_board[a][b].color == 'red':
+                    return self.player1, 1
+
+                elif self.main_board[a][b].color == 'blue':
+                    return self.player2, 1
+
+                return None, 0
+
+        return False, 0
+
+        # if self.lst_scores_now:
+        #     for i, score in enumerate(self.lst_scores_now):
+        #         a = int(score[0])
+        #         b = int(score[1])
+        #
+        #         if self.main_board[a][b].color == 'red':
+        #             count_of_score_red += 1
+        #         else:
+        #             count_of_score_blue += 1
+        #
+        #         if count_of_score_red > count_of_score_blue:
+        #             return self.player1, count_of_score_red
+        #
+        #         elif count_of_score_blue > count_of_score_red:
+        #             return self.player2, count_of_score_blue
+        #
+        #         return None, None
+        # return False, 0
+
+        # ***************************************************************************
+
+        # if self.player1.number_bead == 0 and self.player2.number_bead == 0:
+        #     if self.player1.alive_bead > self.player2.number_bead:
+        #         return self.player1
+        #
+        #     elif self.player2.alive_bead > self.player1.alive_bead:
+        #         return self.player2
+        #
+        #     # no player is winner for only insert
+        #     return None
+        #
+        # # still out bead exist
+        # return False
+        #
+        # #     return self.player2
+        # #
+        # # return False
+
+    def get_neighbors_depth_n(self):
+        pass

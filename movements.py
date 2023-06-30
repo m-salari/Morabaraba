@@ -21,7 +21,7 @@ class movements(RulesGame):
         # if self.player1.number_bead > 0 or self.player2.number_bead > 0:
         if self.player1.turn and self.player1.number_bead > 0:
             if button.color == 'white':
-                self.insert(button)
+                self.insert(button, 1)
                 self.switch_turn()
                 return True
 
