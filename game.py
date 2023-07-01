@@ -68,7 +68,8 @@ class board(QMainWindow):
 
         # setting geometry
         self.setGeometry(100, 100, 800, 600)
-
+        self.setFixedWidth(800)
+        self.setFixedHeight(600)
         self.setStyleSheet(f"""
         background-image: url("{_wd}/images/images/board.jpg"); 
         background-repeat: no-repeat; 

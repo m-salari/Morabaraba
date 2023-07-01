@@ -118,20 +118,17 @@ class algorithms(movements):
                 self.main_board[r][c].color = player.color
                 self.check_score()
                 if self.flag_remove:
-                    self.flag_remove = False
+                    # self.flag_remove = False
                     return player, 100, (r, c)
 
                 self.main_board[r][c].color = enemy.color
                 if self.flag_remove:
-                    self.flag_remove = False
+                    # self.flag_remove = False
                     return enemy, 50, (r, c)
 
                 self.main_board[r][c].color = 'white'
 
         return False, 0, (None, None)
-
-                # else:
-                #     self.main_board[r][c].color = 'white'
 
     def minimax_move(self, depth: int, maximizingPlayer: bool, alpha=float('-inf'), beta=float('inf')):
 
@@ -209,6 +206,41 @@ class algorithms(movements):
                 beta = min(beta, value)
 
             return value, self.best_movement_start_choice
+
+    def finding_end_pos_for_min_bead(self):
+        lst_red_piece = self.get_all_color_piece('red')
+        for piece in lst_red_piece:
+
+            button_red_piece = self.main_board[piece[0]][piece[1]]
+            for neighbor in button_red_piece.neighbors:
+                button_neighbor = self.main_board[neighbor[0]][neighbor[1]]
+                if button_neighbor.color != 'white':
+                    continue
+
+                copy_lst_scores = deepcopy(self.lst_scores_now)
+                copy_flag_remove = deepcopy(self.flag_remove)
+
+                button_neighbor.color = 'red'
+                self.check_score()
+
+                if self.flag_remove:
+                    for grand_child in button_neighbor.neighbors:
+                        grand_child = self.main_board[grand_child[0]][grand_child[1]]
+
+                        if (grand_child.row, grand_child.col) == (piece[0], piece[1]):
+                            continue
+
+                        elif grand_child.color == 'red':
+                            button_neighbor.color = 'white'
+                            return button_neighbor.row, button_neighbor.col
+
+                button_neighbor.color = 'white'
+
+                self.lst_scores_now = copy_lst_scores
+                self.flag_remove = copy_flag_remove
+
+
+
 
     # def minimax_end_choice(self, button, depth: int, maximizingPlayer: bool, alpha=float('-inf'), beta=float('inf')):
     #

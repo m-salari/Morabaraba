@@ -1,3 +1,5 @@
+from random import choice
+
 from algorithms_movement import algorithms
 from copy import deepcopy
 
@@ -40,10 +42,15 @@ class Bot(algorithms):
             p1_bead, p1_alive, p2_bead, p2_alive, copy_lst_scores, copy_flag_remove, copy_board = \
                 self.get_copy_state()
 
+            self.close_window = False
             p = self.minimax(5, False)
-            print("PPPP:", p)
-            x = p[1][0]
-            y = p[1][1]
+            self.close_window = True
+            if p[1]:
+                # print("PPPP:", p)
+                x = p[1][0]
+                y = p[1][1]
+            else:
+                x, y = random_insert[0], random_insert[1]
 
             self.do_copy_to_state(p1_bead=p1_bead, p1_alive=p1_alive, p2_bead=p2_bead, p2_alive=p2_alive,
                                   copy_lst_scores=copy_lst_scores, copy_flag_remove=copy_flag_remove,
@@ -74,15 +81,35 @@ class Bot(algorithms):
         p1_bead, p1_alive, p2_bead, p2_alive, copy_lst_scores, copy_flag_remove, copy_board = \
             self.get_copy_state()
 
-        s = self.minimax_move(4, True)
+        lst_neighbors = self.get_all_white_piece_for_min_bead('white')
 
-        print("ssssssss:", s)
-        x = s[1][0]
-        y = s[1][1]
+        if lst_neighbors:
+            lst_blue = self.get_all_color_piece('blue')
+            x, y = choice(lst_blue)
+
+        else:
+            self.close_window = False
+            s = self.minimax_move(4, True)
+            self.close_window = True
+
+            # print("ssssssss:", s)
+            x = s[1][0]
+            y = s[1][1]
 
         self.do_copy_to_state(p1_bead=p1_bead, p1_alive=p1_alive, p2_bead=p2_bead, p2_alive=p2_alive,
                               copy_lst_scores=copy_lst_scores, copy_flag_remove=copy_flag_remove,
                               copy_board=copy_board)
+
+        # if self.main_board[x][y].color == 'red':
+        #     random_start_bead_to_move = self.random(self.bot_color)
+        #     self.lst_neighbors = self.get_all_white_piece_for_min_bead('white')
+        #     if not self.lst_neighbors:
+        #         self.lst_neighbors = self.check_neighbors(random_start_bead_to_move[0], random_start_bead_to_move[1])
+        #     while True:
+        #         if self.lst_neighbors:
+        #             break
+        #         random_start_bead_to_move = self.random(self.bot_color)
+        #         self.lst_neighbors = self.check_neighbors(random_start_bead_to_move[0], random_start_bead_to_move[1])
 
         self.best_movement_start_choice = (x, y)
         button = self.main_board[x][y]
@@ -91,23 +118,34 @@ class Bot(algorithms):
         self.player1.turn = 0
 
         self.player_win = None
-        # self.best_movement_end_choice = []
         self.total_score_moving = 0
 
         return self.choice_start_bead_to_move(button, 1)
 
     def bot_choice_end_bead_to_move(self):
-        player, score, pos = self.eval_minimax_end(self.best_movement_start_choice)
+        lst_white_all = self.get_all_white_piece_for_min_bead('white')
+        if lst_white_all:
+            player = self.player2
+            pos = self.finding_end_pos_for_min_bead()
+
+            if pos is None:
+                pos = choice(lst_white_all)
+
+            button_pos = self.main_board[pos[0]][pos[1]]
+            if button_pos.color == 'red':
+                pos = choice(lst_white_all)
+
+        else:
+            player, score, pos = self.eval_minimax_end(self.best_movement_start_choice)
 
         if player:
             button = self.main_board[pos[0]][pos[1]]
-            self.best_movement_end_choice = None
-            print('button from yohahahahah:', pos)
+            # print('button from:', pos)
 
         else:
             random_end_bead_to_move = self.random(None, self.lst_neighbors)
             button = self.main_board[random_end_bead_to_move[0]][random_end_bead_to_move[1]]
-            print('button from random:', random_end_bead_to_move)
+            # print('button from random:', random_end_bead_to_move)
 
         if self.choice_end_bead_to_move(button, 1):
             if not self.flag_remove:
@@ -115,16 +153,28 @@ class Bot(algorithms):
 
     def bot_remove_bead(self):
 
-        r = self.minimax_move(4, False)
-        if r:
-            print("rrrrrrrrrr:", r)
-            x = r[1][0]
-            y = r[1][1]
+        copy_board_red = self.get_copy_main_board()
+        copy_flag_remove = deepcopy(self.flag_remove)
 
-        else:
-            random_remove_piece = self.random('red')
-            x, y = random_remove_piece[0], random_remove_piece[1]
-            print('position random remove:', random_remove_piece)
+        self.close_window = False
+        r = self.minimax_move(4, False)
+        self.close_window = True
+
+        self.set_copy_main_board(copy_board_red)
+        self.flag_remove = copy_flag_remove
+
+        print("rrrrrrrrrr:", r)
+        x = r[1][0]
+        y = r[1][1]
+
+        self.player2.turn = 1
+        self.player1.turn = 0
+
+        # btn = self.main_board[x][y]
+        # if btn.color == 'blue':
+        #     random_remove_piece = self.random('red')
+        #     x, y = random_remove_piece[0], random_remove_piece[1]
+        #     print('position remove:', random_remove_piece)
 
         return self.remove_bead(x, y)
 

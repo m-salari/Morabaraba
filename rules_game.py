@@ -1,5 +1,4 @@
-import numpy as np
-
+import sys
 
 class Player:
     def __init__(self, name, color, turn=0, number_bead=12):
@@ -41,6 +40,7 @@ class RulesGame:
         self.end_bead_move = None
         self.color_change_bead = None
 
+        self.close_window = False
         # self.flag_bot = 0
         # self.len_lst_score_now = 0
         # self.count_of_score_red = 0
@@ -90,7 +90,7 @@ class RulesGame:
 
             if self.player1.turn and button.color == self.player1.color:
 
-                print('change color !!!!!!!! to yellow')
+                # print('change color !!!!!!!! to yellow')
                 self.start_bead_move = button
                 self.color_change_bead = button.color
 
@@ -98,11 +98,11 @@ class RulesGame:
                 if flag_change_color_choice_start:
                     self.start_bead_move.change_button_color()
 
-                print('success change color yellow')
+                # print('success change color yellow')
                 return True
 
             elif self.player2.turn and button.color == self.player2.color:
-                print('change color !!!!!!!! to yellow')
+                # print('change color !!!!!!!! to yellow')
                 self.start_bead_move = button
                 self.color_change_bead = button.color
 
@@ -110,7 +110,7 @@ class RulesGame:
                 if flag_change_color_choice_start:
                     self.start_bead_move.change_button_color()
 
-                print('success change color yellow')
+                # print('success change color yellow')
                 return True
         return False
 
@@ -374,9 +374,13 @@ class RulesGame:
     def check_win(self):
         if self.player1.alive_bead < self.min_bead_for_game:
             print('player 2 is winner')
+            if self.close_window:
+                sys.exit()
 
         elif self.player2.alive_bead < self.min_bead_for_game:
             print('player 1 is winner')
+            if self.close_window:
+                sys.exit()
 
     def get_enemy_player(self):
         if self.player1.turn:
