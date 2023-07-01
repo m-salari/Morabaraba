@@ -1,6 +1,7 @@
-# importing libraries
 import sys
 import os
+
+import numpy as np
 from PyQt5.QtWidgets import *
 from main import game_loop
 
@@ -55,11 +56,8 @@ class board(QMainWindow):
         super().__init__()
 
         self.main_board = main_board
-        # self.rule = movements(self.main_board)
-        self.game_loop = game_loop(self.main_board)
-
-        # self.main_board = self.rule.main_board
         self.init_board()
+        self.game_loop = game_loop(self.main_board)
         self.draw_pieces()
         self.moving()
         self.show()

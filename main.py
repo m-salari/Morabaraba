@@ -6,13 +6,19 @@ class game_loop(Bot):
         super().__init__(main_board)
 
     def main(self, row, col):
-        result_player_movement = self.handler_player(row, col)
+        a = True
+        # if self.player1.number_bead == self.player2.number_bead == 0:
+        #     print('caaan not insert')
+        #     a = False
 
-        # if you may play with your friend comment it.
-        # then uncomment "if self.player1.number_bead > 0 or self.player2.number_bead > 0:" and
-        # comment it "if self.player1.turn and self.player1.number_bead > 0:" in handler player
-        if result_player_movement:
-            self.bot_handler()
+        if a:
+            result_player_movement = self.handler_player(row, col)
+
+            # if you may play with your friend comment it.
+            # then uncomment "if self.player1.number_bead > 0 or self.player2.number_bead > 0:" and
+            # comment it "if self.player1.turn and self.player1.number_bead > 0:" in handler player
+            if result_player_movement:
+                self.bot_handler()
 
 
 

@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Player:
     def __init__(self, name, color, turn=0, number_bead=12):
         self.name = name
@@ -8,9 +11,22 @@ class Player:
         self.alive_bead = 0
 
 
+main_board_lst = [['white', None, None, 'white', None, None, 'white'],  # a
+                  [None, 'white', None, 'white', None, 'white', None],  # b
+                  [None, None, 'white', 'white', 'white', None, None],  # c
+                  ['white', 'white', 'white', None, 'white', 'white', 'white'],  # d
+                  [None, None, 'white', 'white', 'white', None, None],  # e
+                  [None, 'white', None, 'white', None, 'white', None],  # f
+                  ['white', None, None, 'white', None, None, 'white']]  # g
+
+
 class RulesGame:
     def __init__(self, main_board):
         self.main_board = main_board
+
+        self.total_score_moving = 0
+        self.player_win = None
+        self.best_movement_end_choice = []
         print('created!')
 
         self.player1 = Player('player1', 'red', 1)
@@ -25,48 +41,45 @@ class RulesGame:
         self.end_bead_move = None
         self.color_change_bead = None
 
-        self.flag_bot = 0
-        self.len_lst_score_now = 0
+        # self.flag_bot = 0
+        # self.len_lst_score_now = 0
+        # self.count_of_score_red = 0
+        # self.count_of_score_blue = 0
 
-    def undo_insert(self, button):
-        if self.player1.turn:
-            self.player1.number_bead += 1
-            button.color = 'white'
-            self.player1.alive_bead -= 1
-            # self.check_score()
-
-        elif self.player2.turn:
-            self.player2.number_bead += 1
-            button.color = "white"
-            self.player2.alive_bead -= 1
-            # self.check_score()
-
-    def insert(self, button, flag_change_color):
+    def insert(self, button, flag_change_color_insert):
         if self.player1.turn:
             if self.player1.number_bead > 0:
                 self.player1.number_bead -= 1
 
                 button.color = self.player1.color
+                self.main_board[button.row][button.col].color = self.player1.color
+                # self.main_board_lst[button.row][button.col] = self.player1.color
+
                 self.player1.alive_bead += 1
-                if flag_change_color:
+                if flag_change_color_insert:
                     button.change_button_color()
                 self.check_score()
+                # return self.main_board
 
         elif self.player2.turn:
             if self.player2.number_bead > 0:
                 self.player2.number_bead -= 1
 
                 button.color = self.player2.color
+                self.main_board[button.row][button.col].color = self.player2.color
+                # self.main_board_lst[button.row][button.col] = self.player2.color
+
                 self.player2.alive_bead += 1
-                if flag_change_color:
+                if flag_change_color_insert:
                     button.change_button_color()
                 self.check_score()
+                # return self.main_board
 
         print('count of bead red: ', self.player1.number_bead)
         print('count of bead blue: ', self.player2.number_bead)
         print("***********************\n")
 
-    def choice_start_bead_to_move(self, button):
+    def choice_start_bead_to_move(self, button, flag_change_color_choice_start):
         row, col = button.row, button.col
 
         self.lst_neighbors = self.get_all_white_piece_for_min_bead('white')
@@ -77,13 +90,13 @@ class RulesGame:
 
             if self.player1.turn and button.color == self.player1.color:
 
-                # self.flag_bot = 1
                 print('change color !!!!!!!! to yellow')
                 self.start_bead_move = button
                 self.color_change_bead = button.color
 
                 self.start_bead_move.color = 'yellow'
-                self.start_bead_move.change_button_color()
+                if flag_change_color_choice_start:
+                    self.start_bead_move.change_button_color()
 
                 print('success change color yellow')
                 return True
@@ -94,21 +107,26 @@ class RulesGame:
                 self.color_change_bead = button.color
 
                 self.start_bead_move.color = 'yellow'
-                self.start_bead_move.change_button_color()
+                if flag_change_color_choice_start:
+                    self.start_bead_move.change_button_color()
 
                 print('success change color yellow')
                 return True
+        return False
 
-    def choice_end_bead_to_move(self, button):
+    def choice_end_bead_to_move(self, button, flag_change_color_choice_end):
         if (button.row, button.col) not in self.lst_neighbors:  # check state end goal exist in list allowed move
             return False
 
         self.end_bead_move = button
         self.end_bead_move.color = self.color_change_bead
-        self.end_bead_move.change_button_color()
+
+        if flag_change_color_choice_end:
+            self.end_bead_move.change_button_color()
 
         self.start_bead_move.color = 'white'
-        self.start_bead_move.change_button_color()
+        if flag_change_color_choice_end:
+            self.start_bead_move.change_button_color()
 
         self.color_change_bead = None
         self.lst_neighbors = []
@@ -360,61 +378,8 @@ class RulesGame:
         elif self.player2.alive_bead < self.min_bead_for_game:
             print('player 1 is winner')
 
-    def is_end_out_bead(self):
-
-        if self.lst_scores_now:
-
-            if len(self.lst_scores_now) != self.len_lst_score_now:
-                self.len_lst_score_now = len(self.lst_scores_now)
-
-                a, b = int(self.lst_scores_now[-1][0]), int(self.lst_scores_now[-1][1])
-                if self.main_board[a][b].color == 'red':
-                    return self.player1, 1
-
-                elif self.main_board[a][b].color == 'blue':
-                    return self.player2, 1
-
-                return None, 0
-
-        return False, 0
-
-        # if self.lst_scores_now:
-        #     for i, score in enumerate(self.lst_scores_now):
-        #         a = int(score[0])
-        #         b = int(score[1])
-        #
-        #         if self.main_board[a][b].color == 'red':
-        #             count_of_score_red += 1
-        #         else:
-        #             count_of_score_blue += 1
-        #
-        #         if count_of_score_red > count_of_score_blue:
-        #             return self.player1, count_of_score_red
-        #
-        #         elif count_of_score_blue > count_of_score_red:
-        #             return self.player2, count_of_score_blue
-        #
-        #         return None, None
-        # return False, 0
-
-        # ***************************************************************************
-
-        # if self.player1.number_bead == 0 and self.player2.number_bead == 0:
-        #     if self.player1.alive_bead > self.player2.number_bead:
-        #         return self.player1
-        #
-        #     elif self.player2.alive_bead > self.player1.alive_bead:
-        #         return self.player2
-        #
-        #     # no player is winner for only insert
-        #     return None
-        #
-        # # still out bead exist
-        # return False
-        #
-        # #     return self.player2
-        # #
-        # # return False
-
-    def get_neighbors_depth_n(self):
-        pass
+    def get_enemy_player(self):
+        if self.player1.turn:
+            return self.player2
+        else:
+            return self.player1
