@@ -2,7 +2,7 @@ import sys
 import os
 
 import numpy as np
-from PyQt5.QtWidgets import *
+from PySide6.QtWidgets import *
 from main import game_loop
 
 _wd = os.getcwd()
